@@ -1,0 +1,17 @@
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.dll
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\System.Reactive.dll
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\System.Reactive.xml
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.AssemblyReference.cache
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.SuggestedBindingRedirects.cache
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CopyComplete
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\mm558\OneDrive\Radna površina\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
