@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 class Program
 {
-    static async Task Main(string[] args)
+    static void Main()
     {
         HttpListener listener = new HttpListener();
         listener.Prefixes.Add("http://localhost:5050/");
@@ -14,7 +14,7 @@ class Program
         Console.WriteLine("Listening...");
 
         var server = new Server(listener);
-        await server.StartAsync();
+        server.Start();
 
         Console.ReadLine();
         listener.Stop();

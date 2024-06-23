@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,18 +16,21 @@ namespace ConsoleApp1
 
         public Server(HttpListener listener)
         {
-            _listener = listener;
+            _listener = listener ?? throw new ArgumentNullException(nameof(listener));
         }
 
-        public async Task StartAsync()
+        public void Start()
         {
             var serverObservable = Observable.FromAsync(_listener.GetContextAsync)
                 .Repeat()
+                .SubscribeOn(TaskPoolScheduler.Default)
+                .ObserveOn(TaskPoolScheduler.Default)
                 .SelectMany(async context =>
                 {
                     try
                     {
-                        Console.WriteLine("Received request for " + context.Request.Url);
+                        LogRequest(context.Request.Url);
+
                         HttpListenerResponse response = context.Response;
                         var urlSegments = context.Request.Url.Segments;
 
@@ -37,9 +42,10 @@ namespace ConsoleApp1
                                 var query = parts[0];
                                 var country = parts[1];
 
-                                if (await Validator.IsValidCategory(query))
+
+                                if (Validator.IsValidCategory(query))
                                 {
-                                    if (await Validator.IsValidCountry(country))
+                                    if (Validator.IsValidCountry(country))
                                     {
                                         var articles = await NewsApiClient.GetNewsArticlesAsync(query, country);
 
@@ -59,21 +65,39 @@ namespace ConsoleApp1
                                         response.ContentLength64 = buffer.Length;
                                         response.ContentType = "application/json";
                                         await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+
+                                        LogResponseSuccess(context.Request.Url, articles.Count);
                                     }
-                                    else { await ErrorHandler.ErrorEncounteredAsync(response, "Error: Invalid country.", "text/plain"); }
+                                    else
+                                    {
+                                        ErrorEncountered(response, "Error: Invalid country.", "text/plain");
+                                        LogResponseError(context.Request.Url, "Invalid country.");
+                                    }
                                 }
-                                else { await ErrorHandler.ErrorEncounteredAsync(response, "Error: Invalid category.", "text/plain"); }
+                                else
+                                {
+                                    ErrorEncountered(response, "Error: Invalid category.", "text/plain");
+                                    LogResponseError(context.Request.Url, "Invalid category.");
+                                }
                             }
-                            else { await ErrorHandler.ErrorEncounteredAsync(response, "Error: Invalid URL. Please provide a valid input.", "text/plain"); }
+                            else
+                            {
+                                ErrorEncountered(response, "Error: Invalid URL. Please provide a valid input.", "text/plain");
+                                LogResponseError(context.Request.Url, "Invalid URL.");
+                            }
                         }
-                        else { await ErrorHandler.ErrorEncounteredAsync(response, "Error.", "text/plain"); }
+                        else
+                        {
+                            ErrorEncountered(response, "Error.", "text/plain");
+                            LogResponseError(context.Request.Url, "Discarded request.");
+                        }
 
                         response.OutputStream.Close();
                         return context;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Error occurred: " + ex.ToString());
+                        LogException(ex);
                         context.Response.StatusCode = 500;
                         context.Response.Close();
                         throw;
@@ -85,17 +109,34 @@ namespace ConsoleApp1
                 ex => Console.WriteLine("Error occurred: " + ex.ToString())
             );
         }
-    }
 
-    public static class ErrorHandler
-    {
-        public static async Task ErrorEncounteredAsync(HttpListenerResponse response, string rString, string ctString)
+        private void LogRequest(Uri url)
+        {
+            Console.WriteLine($"Received request for {url}");
+        }
+
+        private void LogResponseSuccess(Uri url, int articleCount)
+        {
+            Console.WriteLine($"Successfully processed request for {url}. Retrieved {articleCount} articles.");
+        }
+
+        private void LogResponseError(Uri url, string errorMessage)
+        {
+            Console.WriteLine($"Error processing request for {url}: {errorMessage}");
+        }
+
+        private void LogException(Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex}");
+        }
+
+        private void ErrorEncountered(HttpListenerResponse response, string rString, string ctString)
         {
             string responseString = rString;
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
             response.ContentType = ctString;
-            await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+            response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
         }
     }
 }
